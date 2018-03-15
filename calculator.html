@@ -1,0 +1,557 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta
+    http-equiv="Content-Type"
+    content="text/html; charset=utf-8"
+/>
+  <title>Calculate Chemical Ratios</title>
+  <script type="text/javascript">
+    //
+    // elementWeights is a javascript object. It is written as { key1: value1, key2: value2 } and can be used
+    // as elementWeights[<key>] where <key> is a string. Ex: you can access the weight of H
+    // by using elementWeights["H"], which is 1.0079.
+    //
+    // This is used below to access weight values based on form input.
+    //
+    
+    var elementWeights = { "H": 1.0079, "He": 4.0026, "Li": 6.941, "Be": 9.0122, "B": 10.811, "C": 12.0107, "N": 14.0067, "O": 15.9994, "F": 18.9984, "Ne": 20.1797, "Na": 22.9897, "Mg": 24.305, "Al": 26.9815, "Si": 28.0855, "P": 30.9738, "S": 32.065, "Cl": 35.453, "Ar": 39.948, "K": 39.0983, "Ca": 40.078, "Sc": 44.9559, "Ti": 47.867, "V": 50.9415, "Cr": 51.9961, "Mn": 54.938, "Fe": 55.845, "Co": 58.9332, "Ni": 58.6934, "Cu": 63.546, "Zn": 65.39, "Ga": 69.723, "Ge": 72.64, "As": 74.9216, "Se": 78.96, "Br": 79.904, "Kr": 83.8, "Rb": 85.4678, "Sr": 87.62, "Y": 88.9059, "Zr": 91.224, "Nb": 92.9064, "Mo": 95.94, "Tc": 98, "Ru": 101.07, "Rh": 102.9055, "Pd": 106.42, "Ag": 107.8682, "Cd": 112.411, "In": 114.818, "Sn": 118.71, "Sb": 121.76, "Te": 127.6, "I": 126.9045, "Xe": 131.293, "Cs": 132.9055, "Ba": 137.327, "La": 138.9055, "Ce": 140.116, "Pr": 140.9077, "Nd": 144.24, "Pm": 145, "Sm": 150.36, "Eu": 151.964, "Gd": 157.25, "Tb": 158.9253, "Dy": 162.5, "Ho": 164.9303, "Er": 167.259, "Tm": 168.9342, "Yb": 173.04, "Lu": 174.967, "Hf": 178.49, "Ta": 180.9479, "W": 183.84, "Re": 186.207, "Os": 190.23, "Ir": 192.217, "Pt": 195.078, "Au": 196.9665, "Hg": 200.59, "Tl": 204.3833, "Pb": 207.2, "Bi": 208.9804, "Po": 209, "At": 210, "Rn": 222, "Fr": 223, "Ra": 226, "Ac": 227, "Th": 232.0381, "Pa": 231.0359, "U": 238.0289, "Np": 237, "Pu": 244, "Am": 243, "Cm": 247, "Bk": 247, "Cf": 251, "Es": 252, "Fm": 257, "Md": 258, "No": 259, "Lr": 262, "Rf": 261, "Db": 262, "Sg": 266, "Bh": 264, "Hs": 277, "Mt": 268 };
+    
+    function validate() {
+      var element = document.getElementById('EM1');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+      var element = document.getElementById('EM2');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+      var element = document.getElementById('EM3');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+      var element = document.getElementById('EM4');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+      var element = document.getElementById('EM5');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+      var element = document.getElementById('EM6');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+      var element = document.getElementById('EM7');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+      var element = document.getElementById('EM8');
+      element.value = element.value.replace(/[^a-zA-Z]+/, '');
+    }
+    
+    //
+    // getFormValues is simply a helper function to get form
+    // input data in a single line inside calcpayments.
+    //
+    
+    function getFormValues() {
+        return {
+            CF1: document.forms[0].CF1.value * 1,
+            EM1: document.forms[0].EM1.value,
+            SB1: document.forms[0].SB1.value * 1,
+            EM2: document.forms[0].EM2.value,
+            SB2: document.forms[0].SB2.value * 1,
+            CF2: document.forms[0].CF2.value * 1,
+            EM3: document.forms[0].EM3.value,
+            SB3: document.forms[0].SB3.value * 1,
+            EM4: document.forms[0].EM4.value,
+            SB4: document.forms[0].SB4.value * 1,
+            CF3: document.forms[0].CF3.value * 1,
+            EM5: document.forms[0].EM5.value,
+            SB5: document.forms[0].SB5.value * 1,
+            EM6: document.forms[0].EM6.value,
+            SB6: document.forms[0].SB6.value * 1,
+            CF4: document.forms[0].CF4.value * 1,
+            EM7: document.forms[0].EM7.value,
+            SB7: document.forms[0].SB7.value * 1,
+            EM8: document.forms[0].EM8.value,
+            SB8: document.forms[0].SB8.value * 1,
+            CARS: document.forms[0].CARS.value,
+            gram: document.forms[0].gram.value * 1,
+        };
+    }
+    
+    //
+    // updateResults is simply a helper function to write results
+    // out to the html elemetents used after calculations are done.
+    //
+    
+    function updateResults(args) {
+        document.getElementById("Prod1Am").innerHTML = args.product1Amount;
+        document.getElementById("Prod2Am").innerHTML = args.product2Amount;
+        document.getElementById("Reac1AM").innerHTML = args.reactant1Amount;
+        document.getElementById("Reac2AM").innerHTML = args.sreactant2Amount;
+    }
+
+    function calcpayments() {
+
+        //
+        // set up variables we'll need regardless of what CARSy is
+        //
+        
+        var CARSy = document.forms[0].CARSy.value;
+        var formValues = getFormValues();
+        var EMW1 = elementWeights[formValues.EM1];
+        var EMW2 = elementWeights[formValues.EM2];
+        var EMW3 = elementWeights[formValues.EM3];
+        var EMW4 = elementWeights[formValues.EM4];
+        var EMW5 = elementWeights[formValues.EM5];
+        var EMW6 = elementWeights[formValues.EM6];
+        var EMW7 = elementWeights[formValues.EM7];
+        var EMW8 = elementWeights[formValues.EM8];
+        var result = '';
+        
+        if (EMW1 === undefined || EMW2 === undefined || EMW3 === undefined || EMW4 === undefined || EMW5 === undefined || EMW6 === undefined || EMW7 === undefined || EMW8 === undefined) {
+            result = "Ha, please enter an element whose atomic element is less than 109!!";
+            document.getElementById("monthlypayment").innerHTML = result;
+            document.getElementById("error").innerHTML = result;
+            return; // return out here so nothing else in calcpayments will execute
+        }
+        
+        if (formValues.EM1 != formValues.EMA1 || formValues.EM2 != formValues.EMA2 || formValues.EM3 != formValues.EMA3 || formValues.EM4 != formValues.EM4 || formValues.EM5 != formValues.EMA5 || formValues.EM6 != formValues.EMA6 || formValues.EM7 != formValues.EMA7 || formValues.EM8 != formValues.EMA8 ) {
+            result = "If there is an element on the left it should be on the right in the same order!!";
+            document.getElementById("monthlypayment").innerHTML = result;
+            document.getElementById("error").innerHTML = result;
+            return; // return out here so nothing else in calcpayments will execute
+        }
+        
+        //
+        // if we've gotten here then EMW1 and EMW2 have values, let's round
+        // them to the nearest integer for later use
+        //
+        
+        EMW1 = Math.round(EMW1);
+        EMW2 = Math.round(EMW2);
+        EMW3 = Math.round(EMW3);
+        EMW4 = Math.round(EMW4);
+        EMW5 = Math.round(EMW5);
+        EMW6 = Math.round(EMW6);
+        EMW7 = Math.round(EMW7);
+        EMW8 = Math.round(EMW8);
+        
+        //
+        // go ahead and declare our var results here so that
+        // it's in scope after all of the if/else stuff is done
+        // when we can call updateResults()
+        //
+        
+        var results;
+
+        if (CARSy == "ReC1") {
+        
+            var totalProd = (formValues.SB5 * EMW5) + (formValues.SB6 * EMW6);
+            var totalEM1 = formValues.SB1 * EMW1;
+            var totalEM3 = formValues.SB3 * EMW3;
+           
+            
+            
+            if (formValues.CARS == "RC1") {
+                var EM1M = formValues.gram / totalEM1;
+                var ProdAmResult = (EM1M * (formValues.CF3 / formValues.CF1)) * totalProd;
+                var Reac2AMResult = (EM1M * (formValues.CF2 / formValues.CF1)) * totalEM3;
+                results = {
+                    product1Amount: ProdAmResult,
+                    product2Amount: Prod2AmResult,
+                    reactant1Amount: formValues.gram,
+                    reactant2Amount: Reac2AmResult,
+                };
+            } else if (formValues.CARS == "RC2") {
+                var EM3M = formValues.gram / totalEM3;
+                var ProdAmResult = (EM3M * (formValues.CF3 / formValues.CF2)) * totalProd;
+                var Reac1AmResult = (EM3M * (formValues.CF1 / formValues.CF2)) * totalEM1;
+                results = {
+                    product1Amount: ProdAmResult,
+                    product2Amount: Prod2AmResult,
+                    reactant1Amount: Reac1AmResult,
+                    reactant2Amount: formValues.gram,
+                };
+            } else if (formValues.CARS == "PRODU") {
+                var ratioMole = formValues.gram / totalProd;
+                var Reac1AmResult = ratioMole * (formValues.CF1 / formValues.CF3)) * totalEM1;
+                var Reac2AmResult = ratioMole * (formValues.CF2 / formValues.CF3)) * totalEM3;
+                results = {
+                    product1Amount: formValues.gram,
+                    product2Amount: Prod2AmResult,
+                    reactant1Amount: Reac1AmResult,
+                    reactant2Amount: Reac2AmResult,
+                };
+            } 
+            // else if (formValues.CARS == "PRODU2") {
+            //    var ratioMole = formValues.gram / totalProd;
+            //    var Reac1AmResult = ratioMole * totalEMA1;
+            //    var Reac2AmResult = ratioMole * totalEMA2;
+            //    results = {
+            //        product1Amount: ProdAmResult,
+            //        product2Amount: formValues.gram, 
+            //        reactant1Amount: Reac1AmResult,
+            //        sreactant2Amount: Reac2AmResult,
+            //    };
+
+        } else if (CARSy == "ReC2") {
+            
+            var totalReac1 = (formValues.SB1 * EMW1) + (formValues.SB2 * EMW2);
+            var totalEM5 = formValues.SB5 * EMW5;
+            var totalEM7 = formValues.SB7 * EMW7;
+            
+            
+            
+            if (formValues.CARS == "RC1") {
+                var EM1M = formValues.gram / totalReac1;
+                var ProdAmResult = (EM1M * (formValues.CF3 / formValues.CF1)) * totalEM5;
+                var Prod2AmResult = (EM1M * (formValues.CF4 / formValues.CF1)) * totalEM7;
+                results = {
+                    product1Amount: ProdAmResult,
+                    product2Amount: Prod2AmResult,
+                    reactant1Amount: formValues.gram,
+                    reactant2Amount: Reac2AmResult,
+                };
+            } 
+            // else if (formValues.CARS == "RC2") {
+            //    var EM2M = formValues.gram / totalEM2;
+            //    var ProdAmResult = (EM2M * (formValues.CFA / formValues.CF2)) * totalProd;
+            //    var Reac1AMResult = (EM2M * (formValues.CF1 / formValues.CF2)) * totalEM1;
+            //    results = {
+            //        product1Amount: ProdAmResult,
+            //        product2Amount: Prod2AmResult,
+            //        reactant1Amount: Reac1AmResult,
+            //        sreactant2Amount: formValues.gram,
+            //    };
+            } else if (formValues.CARS == "PRODU") {
+                var EM5M = formValues.gram / EM5;
+                var Reac1AmResult = EM5M * (formValues.CF1 / formValues.CF3)) * totalReac1;
+                var Prod2AmResult = EM5M * (formValues.CF4 / formValues.CF3)) * totalEM7;
+                results = {
+                    product1Amount: formValues.gram,
+                    product2Amount: Prod2AmResult,
+                    reactant1Amount: Reac1AmResult,
+                    reactant2Amount: Reac2AmResult,
+                };
+            } else if (formValues.CARS == "PRODU2") {
+                var EM7M = formValues.gram / EM7;
+                var Reac1AmResult = EM7M * (formValues.CF1 / formValues.CF4) * totalReac1;
+                var ProdAmResult = Em7M * (formValues.CF3 / formValues.CF4) * totalEM5;
+                results = {
+                    product1Amount: ProdAmResult,
+                    product2Amount: formValues.gram, 
+                    reactant1Amount: Reac1AmResult,
+                    reactant2Amount: Reac2AmResult,
+                };
+
+            }
+        
+        } else if (CARSy == "ReC3") {
+
+            /*
+
+            WRITE CODE HERE FOR SINGLE REPLACEMENT REACTION
+
+            */
+
+
+        } else if (CARSy == "ReC4") {
+
+            /*
+
+            WRITE CODE HERE FOR DOUBLE REPLACEMENT REACTION
+
+            */
+
+
+        } else if (CARSy == "ReC5") {
+
+            /*
+
+            WRITE CODE HERE FOR COMBUSTION REACTION
+
+            */
+
+
+        }
+        
+        updateResults(results);
+  }
+  </script>
+</head>
+
+<body>
+  <div align="left">
+    <div id="calclpayment">
+      <form>
+        <strong>
+          <h1>Synthesis of two compounds/elements</h1>
+        </strong>
+        <br />
+        <select
+          name="CARSy"
+          id="CARSy"
+          style="width:200px; font-size: 25px;"
+          onchange="calcpayments()"
+          required
+         >
+            <option value="ReC1">Composition</option>
+            <option value="ReC2">Decomposition</option>
+            <option value="ReC3">Single Replacement</option>
+            <option value="ReC4">Double Replacement</option>
+            <option value="ReC5">Combustion</option>
+        </select>.
+        <br /><br />
+        <input
+          type="number"
+          name="CF1"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          id="CF1"
+          value="2" 
+          required
+        />
+        <input
+            type="text"
+            onkeyup="validate();"
+            name="EM1"
+            style="width:50px; font-size: 40px;"
+            maxlength="2"
+            id="EM1"
+            value="H"
+            required
+        />
+        <sub>
+          <input
+            type="number"
+            name="SB1"
+            style="width:30px; font-size: 15px;"
+            id="SB1"
+            value="2"
+            min="1"
+            required
+          />
+        </sub>
+          <input
+            type="text"
+            onkeyup="validate();"
+            name="EM12"
+            style="width:50px; font-size: 40px;"
+            maxlength="2"
+            id="EM12"
+            required
+          />
+        <sub>
+          <input
+            type="number"
+            name="SB12"
+            style="width:30px; font-size: 15px;"
+            id="SB12"
+            min="1"
+            required
+          />
+        </sub>
+        <td width="10">+</td>
+        <input
+          type="number"
+          name="CF2"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          id="CF2"
+          value="1"
+          required
+        />
+        <input
+          type="text"
+          onkeyup="validate();"
+          name="EM2"
+          id="EM2"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          value="O"
+          required
+        />
+        <sub>
+          <input
+            type="number"
+            name="SB2"
+            id="SB2"
+            style="width:30px; font-size: 15px;"
+            value="2"
+            min="1"
+          />
+        </sub>
+          <input
+            type="text"
+            onkeyup="validate();"
+            name="EM12"
+            style="width:50px; font-size: 40px;"
+            maxlength="2"
+            id="EM12"
+            required
+          />
+        <sub>
+          <input
+            type="number"
+            name="SB22"
+            style="width:30px; font-size: 15px;"
+            id="SB22"
+            min="1"
+            required
+          />
+        </sub>
+        <td width="50">--></td>
+        <input
+          type="number"
+          name="CFFAA2"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          id="CFFAA2"
+          value="2"
+          required
+        />
+        <input
+          type="text"
+          onkeyup="validate();"
+          name="EMA1"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          id="EMA1"
+          value="H"
+          required
+        />
+        <sub>
+          <input
+            type="number"
+            name="SBA1"
+            id="SBA1"
+            style="width:30px; font-size: 15px;"
+            value="2"
+            min="1"
+          />
+        </sub>
+        <input
+          type="text"
+          onkeyup="validate();"
+          name="EMA2"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          id="EMA2"
+          Value="O"
+          required
+        />
+        <sub>
+          <input
+            type="number"
+            name="SBA2"
+            id="SBA2"
+            style="width:30px; font-size: 15px;"
+            value="1"
+            min="1"
+          />
+        </sub>
+        <td width="10">+</td>
+        <input
+          type="number"
+          name="CFAA2"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          id="CFAA2"
+          required
+        />
+        <input
+          type="text"
+          onkeyup="validate();"
+          name="EMAA2"
+          id="EMAA2"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          required
+        />
+        <sub>
+          <input
+            type="number"
+            name="SBAA2"
+            id="SBAA2"
+            style="width:30px; font-size: 15px;"
+            min="1"
+          />
+        </sub>
+        <input
+          type="text"
+          onkeyup="validate();"
+          name="EMAA12"
+          style="width:50px; font-size: 40px;"
+          maxlength="2"
+          id="EMAA12"
+          required
+        />
+        <sub>
+          <input
+            type="number"
+            name="SBBAA2"
+            id="SBBAA2"
+            style="width:30px; font-size: 15px;"
+            min="1"
+          />
+        </sub>
+        <br /><br />
+        I have
+        <input
+          type="number"
+          name="gram"
+          id="gram"
+          value="6"
+          style="width:60px; font-size: 25px;"
+          min="1"
+        />
+        grams of
+        <select
+          name="CARS"
+          id="CARS"
+          style="width:200px; font-size: 25px;"
+          required
+        >
+          <option value="RC1">Reactant 1</option>
+          <option value="RC2"  selected="selected">Reactant 2</option>
+          <option value="PRODU">Product</option>
+          <option value="PRODU2">Product 2</option>
+        </select>.
+        <br /><br />
+        <td>
+          <input
+            name="Input"
+            type="button"
+            value="Solve"
+            onclick="calcpayments()"
+            style="width:80px;"
+          />
+        </td>
+        <td>
+          <input
+            name="reset2"
+            type="reset"
+            value="Clear"
+            style="width:80px;"
+          />
+        </td>
+        </tr>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div style="font-size: 25px;background-color:#333; font-weight: bold; padding: 5px; color:#FFF;">
+          <div id="ProdAm">0</div>
+          GRAMS OF Product
+        </div>
+        <br />
+        <div style="font-size: 25px;background-color:#333; font-weight: bold; padding: 5px; color:#FFF;">
+          <div id="ProdAm2">0</div>
+          GRAMS OF Product 2
+        </div>
+        <br />
+        <div style="font-size: 25px;background-color:#333; font-weight: bold; padding: 5px; color:#FFF;">
+          <div id="Reac1AM">0</div>
+          GRAMS OF Reactant 1
+        </div>
+        <br />
+        <div style="font-size: 25px;background-color:#333; font-weight: bold; padding: 5px; color:#FFF;">
+          <div id="Reac2AM">0</div>
+          GRAMS OF Reactant 2
+        </div>
+      </form>
+    </div><!-- #calclpayment -->
+  </div>
+
+</body>
+</html>
